@@ -1,0 +1,291 @@
+/* ── GAME SCENE ── */
+.game-scene {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  cursor: none;
+}
+
+.game-scene canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ── HUD OVERLAY ── */
+.hud-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  font-family: 'Courier New', monospace;
+  color: #c8bfca;
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+/* Vignette — dark red edges */
+.hud-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgba(40, 4, 10, 0.55) 100%
+  );
+  pointer-events: none;
+}
+
+/* Flashlight battery — top left */
+.hud-flashlight {
+  position: absolute;
+  top: 20px;
+  left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hud-label {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #9a8da0;
+}
+
+.hud-battery-bar {
+  width: 90px;
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(180,160,190,0.25);
+}
+
+.hud-battery-fill {
+  height: 100%;
+  background: #c8b8d0;
+  transition: width 0.5s ease;
+}
+
+/* Countdown timer — top right */
+.hud-timer {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.hud-time {
+  font-size: 28px;
+  letter-spacing: 4px;
+  color: #d4c8d8;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.hud-timer.danger .hud-time {
+  color: #e06060;
+}
+
+.hud-timer.critical .hud-time {
+  color: #ff3030;
+  animation: timerPulse 0.5s ease infinite alternate;
+}
+
+@keyframes timerPulse {
+  from { opacity: 1; }
+  to   { opacity: 0.3; }
+}
+
+/* Click to enter prompt — centre */
+.hud-click-prompt {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(5, 2, 10, 0.72);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.hud-prompt-title {
+  font-size: 13px;
+  letter-spacing: 8px;
+  color: #e8d4e0;
+}
+
+.hud-prompt-sub {
+  font-size: 20px;
+  letter-spacing: 6px;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(220, 80, 140, 0.8);
+}
+
+.hud-prompt-hint {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #7a6e80;
+  margin-top: 10px;
+}
+
+/* Controls reminder — bottom left */
+.hud-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #5a5060;
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+
+/* Exit button — bottom right, always clickable */
+.hud-exit-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 22px;
+  pointer-events: auto;
+  background: rgba(10, 5, 15, 0.7);
+  border: 1px solid rgba(180, 130, 160, 0.3);
+  color: #9a8898;
+  font-size: 9px;
+  letter-spacing: 3px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  transition: 0.2s ease;
+}
+
+.hud-exit-btn:hover {
+  background: rgba(100, 30, 60, 0.8);
+  color: #e8c4d4;
+  border-color: rgba(220, 100, 150, 0.5);
+}
+
+/* Crosshair */
+.hud-overlay::after {
+  content: '·';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+
+/* Key inventory tag */
+.hud-inventory-key {
+  margin-top: 8px;
+  color: #f7d354;
+  font-size: 10px;
+  letter-spacing: 2px;
+  background: rgba(30, 25, 10, 0.6);
+  padding: 4px 8px;
+  border: 1px solid rgba(247, 211, 84, 0.4);
+  display: inline-block;
+  animation: keyGlow 2s infinite alternate;
+}
+
+@keyframes keyGlow {
+  from { box-shadow: 0 0 5px rgba(247, 211, 84, 0.2); }
+  to { box-shadow: 0 0 15px rgba(247, 211, 84, 0.6); }
+}
+
+/* Interaction prompt */
+.hud-interact-prompt {
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(12, 6, 18, 0.85);
+  border: 1px solid rgba(230, 140, 180, 0.5);
+  padding: 8px 18px;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 11px;
+  letter-spacing: 2px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.hud-key-badge {
+  background: #ff3377;
+  color: #fff;
+  font-weight: bold;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+/* Temporary message banner */
+.hud-message-banner {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(5, 2, 8, 0.88);
+  border-left: 3px solid #ff4477;
+  padding: 12px 24px;
+  color: #f4dce8;
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(0,0,0,0.9);
+  animation: fadeIn 0.4s ease;
+}
+
+/* Modal overlays (Game Over & Victory) */
+.hud-modal {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: rgba(4, 2, 8, 0.92);
+  pointer-events: auto;
+  z-index: 50;
+  text-align: center;
+  padding: 20px;
+}
+
+.hud-modal.gameover .hud-modal-title {
+  color: #ff3344;
+  text-shadow: 0 0 25px rgba(255, 30, 50, 0.8);
+}
+
+.hud-modal.victory .hud-modal-title {
+  color: #44ff88;
+  text-shadow: 0 0 25px rgba(50, 255, 100, 0.8);
+}
+
+.hud-modal-title {
+  font-family: Georgia, serif;
+  font-size: clamp(28px, 5vw, 44px);
+  letter-spacing: 6px;
+}
+
+.hud-modal-desc {
+  color: #c4b6c6;
+  font-size: 12px;
+  letter-spacing: 3px;
+  max-width: 480px;
+  line-height: 1.8;
+}
+
+.hud-modal-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+}

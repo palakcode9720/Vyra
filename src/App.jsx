@@ -1,122 +1,234 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+
+import { useState, lazy, Suspense } from "react";
+import "./App.css";
+
+const GameScene = lazy(() => import("./game/GameScene"));
+
+const characters = [
+  {
+    id: "nora",
+    name: "NORA",
+    role: "THE OBSERVER",
+    description: "She notices what everyone else overlooks.",
+    status: "FREE",
+    unlocked: true,
+  },
+  {
+    id: "kai",
+    name: "KAI",
+    role: "THE UNKNOWN",
+    description: "A friendly face can hide the darkest secrets.",
+    status: "DIAMOND UNLOCK",
+    unlocked: false,
+  },
+  {
+    id: "mira",
+    name: "MIRA",
+    role: "THE STRATEGIST",
+    description: "Every move has a reason. Every silence has a meaning.",
+    status: "DIAMOND UNLOCK",
+    unlocked: false,
+  },
+  {
+    id: "ren",
+    name: "REN",
+    role: "THE REMEMBERED",
+    description: "He knows something about this world. Something he shouldn't.",
+    status: "PREMIUM",
+    unlocked: false,
+  },
+];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [screen, setScreen] = useState("home");
+  const [selectedCharacter, setSelectedCharacter] = useState("nora");
+
+  const chooseCharacter = (character) => {
+    if (!character.unlocked) {
+      alert(`${character.name} is currently locked.`);
+      return;
+    }
+
+    setSelectedCharacter(character.id);
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
+    <main className="game-container">
+
+      {/* Full-screen 3D game — render outside normal flow */}
+      {screen === "game" && (
+        <Suspense fallback={null}>
+          <GameScene onExit={() => setScreen("intro")} />
+        </Suspense>
+      )}
+
+      {screen !== "game" && screen === "home" && (
+        <section className="home-screen">
+          <div className="background-overlay"></div>
+
+          <div className="home-content">
+            <p className="eyebrow">WELCOME TO THE INTERVAL</p>
+            <h1 className="game-title">VYRA</h1>
+
+            <p className="tagline">
+              EVERY GAME HAS A PRICE.
+              <br />
+              EVERY SECRET HAS A COST.
+            </p>
+
+            <div className="home-buttons">
+              <button
+                className="game-button primary"
+                onClick={() => setScreen("characters")}
+              >
+                NEW GAME
+              </button>
+
+              <button
+                className="game-button"
+                onClick={() => alert("No saved game found yet.")}
+              >
+                CONTINUE
+              </button>
+
+              <button
+                className="game-button"
+                onClick={() => setScreen("settings")}
+              >
+                SETTINGS
+              </button>
+            </div>
+          </div>
+
+          <p className="bottom-text">
+            SEVEN GAMES. FOUR STORIES. ONE TRUTH.
           </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+        </section>
+      )}
 
-      <div className="ticks"></div>
+      {screen === "characters" && (
+        <section className="character-screen">
+          <div className="character-overlay"></div>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+          <div className="character-content">
+            <p className="chapter-label">THE INTERVAL AWAITS</p>
+            <h1>CHOOSE YOUR STORY</h1>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+            <p className="character-subtitle">
+              FOUR PEOPLE. FOUR DIFFERENT TRUTHS.
+              <br />
+              WHOSE STORY WILL YOU DISCOVER?
+            </p>
+
+            <div className="character-grid">
+              {characters.map((character) => (
+                <button
+                  key={character.id}
+                  className={`character-card ${selectedCharacter === character.id ? "selected" : ""
+                    } ${!character.unlocked ? "locked" : ""}`}
+                  onClick={() => chooseCharacter(character)}
+                >
+                  <span className="character-status">
+                    {character.status}
+                  </span>
+
+                  <span className="character-symbol">
+                    {character.id === "nora" && "◇"}
+                    {character.id === "kai" && "♠"}
+                    {character.id === "mira" && "♢"}
+                    {character.id === "ren" && "♜"}
+                  </span>
+
+                  <span className="character-name">
+                    {character.name}
+                  </span>
+
+                  <span className="character-role">
+                    {character.role}
+                  </span>
+
+                  <span className="character-description">
+                    {character.description}
+                  </span>
+
+                  {selectedCharacter === character.id && (
+                    <span className="selected-label">
+                      SELECTED
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+
+            <button
+              className="game-button primary continue-button"
+              onClick={() => setScreen("intro")}
+            >
+              BEGIN STORY
+            </button>
+
+            <button
+              className="game-button back-button"
+              onClick={() => setScreen("home")}
+            >
+              BACK
+            </button>
+          </div>
+        </section>
+      )}
+
+      {screen === "intro" && (
+        <section className="intro-screen">
+          <p className="chapter-label">PROLOGUE</p>
+          <h2>11:11 PM</h2>
+
+          <div className="story-text">
+            <p>The city was unusually quiet that night.</p>
+            <p>
+              Nora walked through the empty streets,
+              unaware that her life was about to change.
+            </p>
+            <p>A strange tunnel stood ahead.</p>
+            <p className="highlight">
+              And then, the world went dark.
+            </p>
+          </div>
+
+          <button
+            className="game-button primary"
+            onClick={() => setScreen("game")}
+          >
+            ENTER THE INTERVAL
+          </button>
+
+          <button
+            className="game-button"
+            onClick={() => setScreen("characters")}
+          >
+            BACK
+          </button>
+        </section>
+      )}
+
+      {screen === "settings" && (
+        <section className="intro-screen">
+          <p className="chapter-label">VYRA</p>
+          <h2>SETTINGS</h2>
+          <p className="story-text">
+            Audio, display and gameplay settings will be available here.
+          </p>
+
+          <button
+            className="game-button"
+            onClick={() => setScreen("home")}
+          >
+            BACK
+          </button>
+        </section>
+      )}
+
+    </main>
+  );
 }
 
-export default App
+export default App;
